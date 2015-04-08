@@ -1,0 +1,43 @@
+#mix-content {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.now-playing {
+  width: 300px;
+  height: 300px;
+  margin: 3px auto;
+  background: #eee;
+}
+.tracks {
+  width: 100%;
+}
+
+.tracks--upcoming {
+  .tracks--row:nth-child(even) {
+    text-align: left;
+  }
+
+  .tracks--row:nth-child(odd) {
+    text-align: right;
+  }
+}
+
+.tracks--played {
+  .tracks--row:nth-child(even) {
+    text-align: right;
+  }
+
+  .tracks--row:nth-child(odd) {
+    text-align: left;
+  }
+}
+
+
+.track {
+  height: 120px;
+  width: 120px;
+  background-color: #f1f1f1;
+  display: inline-block;
+  margin: 0 1px;
+}

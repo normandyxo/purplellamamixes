@@ -1,5 +1,24 @@
 extends layout
 
+block js
+    script(src='/js/purplellama.mix.js')
 block content
     div#mix-content
         #{mixId}
+
+        div(class="tracks tracks--played")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+        div(class="now-playing")
+        div(class="tracks tracks--upcoming")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+            div(class="track")
+

@@ -17,10 +17,18 @@ module.exports = function (grunt) {
         file: 'bin/www'
       }
     },
+    browserify: {
+        dist: {
+            files: {
+                'public/js/purplellama.home.js': ['app/js/home/**/*.js'],
+                'public/js/purplellama.mix.js': ['app/js/mix/**/*.js']
+            }
+        }
+    },
     less: {
       dist: {
         files: {
-          'public/css/style.css': 'public/css/style.less'
+          'public/css/style.css': 'app/less/purplellama.less'
         }
       }
     },
@@ -38,14 +46,15 @@ module.exports = function (grunt) {
         tasks: ['develop', 'delayed-livereload']
       },
       js: {
-        files: ['public/js/*.js'],
+        files: ['app/js/**/*.js'],
         options: {
           livereload: reloadPort
-        }
+        },
+          tasks: ['browserify']
       },
       css: {
         files: [
-          'public/css/*.less'
+          'app/less/*.less'
         ],
         tasks: ['less'],
         options: {
@@ -80,9 +89,10 @@ module.exports = function (grunt) {
     }, 500);
   });
 
-  grunt.registerTask('default', [
-    'less',
-    'develop',
-    'watch'
-  ]);
+    grunt.registerTask('default', [
+        'less',
+        'browserify',
+        'develop',
+        'watch'
+    ]);
 };
