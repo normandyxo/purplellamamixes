@@ -20,19 +20,22 @@ var _player = {
         self.$upcoming = self.$mixContent.children('.tracks.tracks--upcoming');
     },
 
-    updateCurrentTrack: function () {
+    updateCurrentTrack: function (done) {
         var self = this;
-        self.$nowPlaying.css({
-            'background-image': 'url(' + self.currentTrack.coverImage +')'
+        self.$nowPlaying.stop().fadeOut(500, function () {
+            $(this).css({
+                'background-image': 'url(' + self.currentTrack.coverImage +')'
+            }).fadeIn(500, done);
         });
     },
 
     addTrackToPlayed: function (track) {
         var self = this,
             $track = $('<div class="track"></div>').css({
-            'background-image': 'url(' + track.coverImage + ')'
+            'background-image': 'url(' + track.coverImage + ')',
+            'display': 'none'
         });
-        self.$played.prepend($track);;
+        $track.prependTo(self.$played).fadeIn(500);
     },
 
     initializeUpcomingTracks: function () {
@@ -72,19 +75,24 @@ var _player = {
         });
 
         self.audio.ontimeupdate = function checkTrack () {
+            var previous;
 
             if (self.trackStack.length) {
                 if (Math.floor(self.audio.currentTime) >= self.trackStack[0].timestamp) {
 
                     // remove the first child of the $upcoming tracks
-                    self.$upcoming.find('.track:first').remove();
+                    self.$upcoming.find('.track:first').fadeOut(500, function () {
+                        $(this).remove();
 
-                    // add the currentTrack as the latest played.
-                    self.addTrackToPlayed(self.currentTrack);
+                        previous = self.currentTrack;
 
-                    // pop the stack to get the new currentTrack
-                    self.currentTrack = self.trackStack.shift();
-                    self.updateCurrentTrack();
+                        // pop the stack to get the new currentTrack
+                        self.currentTrack = self.trackStack.shift();
+                        self.updateCurrentTrack(function () {
+                            // add the currentTrack as the latest played.
+                            self.addTrackToPlayed(previous);
+                        });
+                    });
                 }
             }
         };
