@@ -10,6 +10,7 @@ router.get('/', function (req, res) {
 router.get('/mix/:mixId', function (req, res) {
     var mix = {
         title: 'Mix #1',
+        url: 'mixes/test-mix.mp3',
         tracks: [{
             title: 'song 1',
             timestamp: 0
