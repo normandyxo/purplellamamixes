@@ -1,4 +1,4 @@
 node_modules/
-public/
+public/**
 .sass-cache
 .idea/
