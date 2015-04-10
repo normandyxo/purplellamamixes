@@ -94,7 +94,8 @@ var _player = {
     },
 
     initializeMix: function (mix) {
-        var self = this;
+        var self = this,
+            $control;
 
         self.trackStack = mix.tracks.slice();
         self.currentTrack = self.trackStack.shift();
@@ -104,15 +105,16 @@ var _player = {
         self.updateCurrentTrack();
         self.initializeUpcomingTracks();
 
+        $control = self.$nowPlaying.find('.overlay__controls > img');
+
         // toggle play/pause
-        self.$nowPlaying.bind('click', function () {
+        $control.bind('click', function () {
             if (self.audio.paused) {
                 self.audio.play();
             }
             else {
                 self.audio.pause();
             }
-            self.$nowPlaying.toggleClass('playing')
         });
 
         self.audio.ontimeupdate = function checkTrack () {

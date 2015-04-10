@@ -1,37 +1,38 @@
 #mix-content {
-  width: 500px;
   margin: 0 auto;
+  width: 500px;
 }
 
 .now-playing {
-  width: 300px;
+  background-size: contain;
   height: 300px;
   margin: 3px auto;
-  background-size: contain;
+  width: 300px;
 
   .overlay {
-    width: 300px;
+    display: none;
     height: 300px;
     text-align: center;
-//    display: none;
+    width: 300px;
   }
 
   &:hover {
+    cursor: pointer;
+
     .overlay--paused {
       display: block;
-      cursor: pointer;
-    }
-  }
 
-  .icon {
-    &.icon--play {
-      margin-top: 86px;
+      .overlay__controls {
+        .icon {
+          margin-top: 86px;
+        }
+      }
     }
   }
 }
 .tracks {
-  width: 100%;
   text-align: center;
+  width: 100%;
 }
 
 &.tracks__row {
@@ -39,9 +40,9 @@
 }
 
 .track {
-  height: 120px;
-  width: 120px;
-  display: inline-block;
-  margin: 0 1px;
   background-size: contain;
+  display: inline-block;
+  height: 120px;
+  margin: 0 1px;
+  width: 120px;
 }
