@@ -24,7 +24,6 @@ var _player = {
         var self = this;
         self.$nowPlaying.stop().fadeOut(500, function () {
             $(this)
-                .text(self.currentTrack.title)
                 .css({
                     'background-image': 'url(' + self.currentTrack.coverImage +')'
                 })
@@ -99,7 +98,6 @@ var _player = {
 
         self.trackStack = mix.tracks.slice();
         self.currentTrack = self.trackStack.shift();
-        self.$nowPlaying.text(self.currentTrack.title);
         self.audio = new Audio();
         self.audio.src = mix.url;
 

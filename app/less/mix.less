@@ -9,8 +9,24 @@
   margin: 3px auto;
   background-size: contain;
 
-  &:hover {
+  .overlay {
+    width: 300px;
+    height: 300px;
+    text-align: center;
+//    display: none;
+  }
 
+  &:hover {
+    .overlay--paused {
+      display: block;
+      cursor: pointer;
+    }
+  }
+
+  .icon {
+    &.icon--play {
+      margin-top: 86px;
+    }
   }
 }
 .tracks {
