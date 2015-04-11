@@ -1,5 +1,18 @@
 extends layout
 
+block js
+    script(src='/js/purplellama.mix.js')
 block content
     div#mix-content
         #{mixId}
+
+        div(class="tracks tracks__played")
+            div(class="tracks__row pull-left")
+        div(class="clear")
+        div(class="now-playing")
+            div(class="overlay overlay--paused")
+                div(class="overlay__controls")
+                    img(class="icon icon--play" src='/assets/icons/play-128.png')
+        div(class="tracks tracks__upcoming")
+            div(class="tracks__row")
+

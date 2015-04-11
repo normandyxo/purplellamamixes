@@ -8,7 +8,28 @@ router.get('/', function (req, res) {
 });
 
 router.get('/mix/:mixId', function (req, res) {
-  res.render('mix', { mixId: req.params.mixId });
+    var mix = {
+        title: 'Mix #1',
+        url: 'mixes/test-mix.mp3',
+        tracks: [{
+            title: 'song 1',
+            timestamp: 0
+        },{
+            title: 'song 2',
+            timestamp: 5
+        },{
+            title: 'song 3',
+            timestamp: 10
+        },{
+            title: 'song 4',
+            timestamp: 15
+        }]
+    };
+
+    res.render('mix', {
+        mixId: req.params.mixId,
+        mix: mix
+    });
 });
 
 module.exports = router;
