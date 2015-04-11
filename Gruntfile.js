@@ -103,7 +103,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('heroku:production', [
         'less',
-        'browserify',
-        'develop',
+        'browserify'
     ]);
 };
