@@ -29,6 +29,28 @@ module.exports = function (grunt) {
                     }
                 }
             },
+            copy: {
+                assets: {
+                    files: [
+                        {
+                            expand: true,
+                            cwd: 'app/',
+                            src: 'assets/**/*',
+                            dest: 'public/'
+                        }
+                    ]
+                },
+                mixes: {
+                    files: [
+                        {
+                            expand: true,
+                            cwd: 'app/',
+                            src: 'mixes/**/*',
+                            dest: 'public/'
+                        }
+                    ]
+                }
+            },
             less: {
                 dist: {
                     files: {
@@ -95,6 +117,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', [
+        'copy:assets',
+        'copy:mixes',
         'less',
         'browserify',
         'develop',
@@ -102,6 +126,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('heroku:production', [
+        'copy:assets',
+        'copy:mixes',
         'less',
         'browserify'
     ]);
