@@ -6,6 +6,7 @@ var _player = {
     $upcoming: null,
     $upcoming: null,
     audio: null,
+    $playedTrigger: null,
 
     trackStack: [],
     currentTrack: null,
@@ -18,7 +19,9 @@ var _player = {
         self.$nowPlaying = self.$mixContent.children('.now-playing');
         self.$played = self.$mixContent.children('.tracks.tracks__played');
         self.$upcoming = self.$mixContent.children('.tracks.tracks__upcoming');
+        self.$playedTrigger = self.$mixContent.children('.tracks__played__trigger');
     },
+
 
     updateCurrentTrack: function (done) {
         var self = this;
@@ -115,6 +118,11 @@ var _player = {
             else {
                 self.audio.pause();
             }
+        });
+
+        self.$playedTrigger.bind('click', function () {
+            self.$played.toggleClass('tracks__played--hide');
+            $(this).toggleClass('tracks__played__trigger--hidden');
         });
 
         self.audio.ontimeupdate = function checkTrack () {
