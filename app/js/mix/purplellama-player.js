@@ -11,6 +11,7 @@ var _player = {
     trackStack: [],
     currentTrack: null,
     played: [],
+    currentIndex: 0,
 
     initializeElements: function () {
         var self = this;
@@ -36,24 +37,28 @@ var _player = {
 
     initializeUpcomingTracks: function () {
         var self = this,
-            $track;
+            $track,
+            trackIndex;
 
         self.trackStack.forEach(function (upcoming, i) {
+            trackIndex = i + 1;
+
             $track = $('<div class="track"></div>')
                     .css({
                         'background-image': 'url(' + upcoming.coverImage + ')'
-                    });
+                    }).data('trackIndex', trackIndex);
             self.$upcoming.append($track);
         });
     },
 
-    createTrackElement: function (track) {
+    createTrackElement: function (track, index) {
 
         return $('<div class="track"></div>')
             .css({
                 'background-image': 'url(' + track.coverImage + ')'
             })
-            .text(track.title);
+            .text(track.title)
+            .data('trackIndex', index);
 
     },
 
@@ -126,13 +131,16 @@ var _player = {
         });
 
         self.audio.ontimeupdate = function checkTrack () {
-            var previous;
+            var previous,
+                trackIndex;
 
             if (self.trackStack.length) {
                 if (Math.floor(self.audio.currentTime) >= self.trackStack[0].timestamp) {
 
                     // remove the first child of the $upcoming tracks
                     self.$upcoming.find('.track:first').fadeOut(500, function () {
+
+                        trackIndex = $(this).data('trackIndex');
                         $(this).remove();
 
                         previous = self.currentTrack;
@@ -141,12 +149,16 @@ var _player = {
                         self.currentTrack = self.trackStack.shift();
                         self.updateCurrentTrack(function () {
                             // add the currentTrack as the latest played.
-                            self.addTrackToPlayed(self.createTrackElement(previous));
+                            self.addTrackToPlayed(self.createTrackElement(previous, trackIndex - 1));
                         });
                     });
                 }
             }
         };
+
+        $('.tracks').on('click', '.track', function onClickTrack (event) {
+            console.log($(event.target).data('trackIndex'));
+        });
     }
 };
 
