@@ -4,10 +4,10 @@ var _player = {
     $mixContent: null,
     $nowPlaying: null,
     $upcoming: null,
-    $upcoming: null,
     audio: null,
     $playedTrigger: null,
 
+    mix: [],
     trackStack: [],
     currentTrack: null,
     played: [],
@@ -105,10 +105,11 @@ var _player = {
         var self = this,
             $control;
 
-        self.trackStack = mix.tracks.slice();
+        self.mix = mix;
+        self.trackStack = self.mix.tracks.slice();
         self.currentTrack = self.trackStack.shift();
         self.audio = new Audio();
-        self.audio.src = mix.url;
+        self.audio.src = self.mix.url;
 
         self.updateCurrentTrack();
         self.initializeUpcomingTracks();
@@ -156,8 +157,39 @@ var _player = {
             }
         };
 
+        /**
+         * When a track is clicked, skip the audio to that track and re-render the UI
+         */
         $('.tracks').on('click', '.track', function onClickTrack (event) {
-            console.log($(event.target).data('trackIndex'));
+            var trackIndex = $(event.target).data('trackIndex'),
+                played = [];
+
+            self.audio.pause();
+
+            self.trackStack = self.mix.tracks.slice();
+            self.currentTrack = self.trackStack[trackIndex];
+
+            played = self.trackStack.slice(0, trackIndex);
+            self.trackStack = self.trackStack.slice(trackIndex + 1);
+
+            self.updateCurrentTrack(function () {
+
+                // reset the played rows
+                self.$played.empty().append('<div class="tracks__row pull-left"></div>');
+                // reset the upcoming rows
+                self.$upcoming.empty().append('<div class="tracks__row"></div>')
+
+                // re render the played tracks
+                played.forEach(function (playedTrack, index) {
+                    self.addTrackToPlayed(self.createTrackElement(playedTrack, index));
+                });
+
+                self.initializeUpcomingTracks();
+
+                self.audio.currentTime = self.currentTrack.timestamp;
+
+                self.audio.play();
+            });
         });
     }
 };
