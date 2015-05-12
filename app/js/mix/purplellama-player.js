@@ -4,13 +4,14 @@ var _player = {
     $mixContent: null,
     $nowPlaying: null,
     $upcoming: null,
-    $upcoming: null,
     audio: null,
     $playedTrigger: null,
 
+    mix: [],
     trackStack: [],
     currentTrack: null,
     played: [],
+    currentIndex: 0,
 
     initializeElements: function () {
         var self = this;
@@ -26,34 +27,44 @@ var _player = {
     updateCurrentTrack: function (done) {
         var self = this;
         self.$nowPlaying.stop().fadeOut(500, function () {
+
             $(this)
                 .css({
                     'background-image': 'url(' + self.currentTrack.coverImage +')'
                 })
-                .fadeIn(500, done);
+                .fadeIn(500)
+                .promise()
+                .done(done);
         });
     },
 
-    initializeUpcomingTracks: function () {
+    initializeUpcomingTracks: function (indexOffset) {
         var self = this,
             $track;
 
+        if (typeof indexOffset === 'undefined') {
+            indexOffset = 0;
+        }
         self.trackStack.forEach(function (upcoming, i) {
+
             $track = $('<div class="track"></div>')
                     .css({
                         'background-image': 'url(' + upcoming.coverImage + ')'
-                    });
+                    })
+                    .text(upcoming.title)
+                    .data('trackIndex', i + 1 + indexOffset);
             self.$upcoming.append($track);
         });
     },
 
-    createTrackElement: function (track) {
+    createTrackElement: function (track, index) {
 
         return $('<div class="track"></div>')
             .css({
                 'background-image': 'url(' + track.coverImage + ')'
             })
-            .text(track.title);
+            .text(track.title)
+            .data('trackIndex', index);
 
     },
 
@@ -100,10 +111,11 @@ var _player = {
         var self = this,
             $control;
 
-        self.trackStack = mix.tracks.slice();
+        self.mix = mix;
+        self.trackStack = self.mix.tracks.slice();
         self.currentTrack = self.trackStack.shift();
         self.audio = new Audio();
-        self.audio.src = mix.url;
+        self.audio.src = self.mix.url;
 
         self.updateCurrentTrack();
         self.initializeUpcomingTracks();
@@ -126,13 +138,16 @@ var _player = {
         });
 
         self.audio.ontimeupdate = function checkTrack () {
-            var previous;
+            var previous,
+                trackIndex;
 
             if (self.trackStack.length) {
-                if (Math.floor(self.audio.currentTime) >= self.trackStack[0].timestamp) {
+                if (Math.floor(self.audio.currentTime) > self.trackStack[0].timestamp) {
 
                     // remove the first child of the $upcoming tracks
                     self.$upcoming.find('.track:first').fadeOut(500, function () {
+
+                        trackIndex = $(this).data('trackIndex');
                         $(this).remove();
 
                         previous = self.currentTrack;
@@ -141,12 +156,56 @@ var _player = {
                         self.currentTrack = self.trackStack.shift();
                         self.updateCurrentTrack(function () {
                             // add the currentTrack as the latest played.
-                            self.addTrackToPlayed(self.createTrackElement(previous));
+                            self.addTrackToPlayed(self.createTrackElement(previous, trackIndex - 1));
                         });
                     });
                 }
             }
         };
+
+        /**
+         * When a track is clicked, skip the audio to that track and re-render the UI
+         */
+        $('.tracks').on('click', '.track', function onClickTrack (event) {
+            var trackIndex = $(event.target).data('trackIndex'),
+                played = [],
+                i;
+
+            self.audio.pause();
+
+            self.trackStack = self.mix.tracks.slice();
+            self.currentTrack = self.trackStack[trackIndex];
+
+            played = self.trackStack.slice(0, trackIndex);
+            self.trackStack = self.trackStack.slice(trackIndex + 1);
+
+            self.updateCurrentTrack(function () {
+
+                // reset the played rows
+                self.$played.empty().append('<div class="tracks__row pull-left"></div>');
+                // reset the upcoming rows
+                self.$upcoming.empty().append('<div class="tracks__row"></div>')
+
+                if (trackIndex == 0) {
+                    self.audio.currentTime = 0;
+                }
+                else {
+
+                    // re render the played tracks
+                    played.forEach(function (playedTrack, index) {
+                        self.addTrackToPlayed(self.createTrackElement(playedTrack, index));
+                        self.$played.finish();
+                    });
+
+                    self.audio.currentTime = self.currentTrack.timestamp;
+                }
+
+                self.initializeUpcomingTracks(trackIndex);
+                self.$upcoming.finish();
+
+                self.audio.play();
+            });
+        });
     }
 };
 
