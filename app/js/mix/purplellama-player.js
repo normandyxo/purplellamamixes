@@ -27,26 +27,32 @@ var _player = {
     updateCurrentTrack: function (done) {
         var self = this;
         self.$nowPlaying.stop().fadeOut(500, function () {
+
             $(this)
                 .css({
                     'background-image': 'url(' + self.currentTrack.coverImage +')'
                 })
-                .fadeIn(500, done);
+                .fadeIn(500)
+                .promise()
+                .done(done);
         });
     },
 
-    initializeUpcomingTracks: function () {
+    initializeUpcomingTracks: function (indexOffset) {
         var self = this,
-            $track,
-            trackIndex;
+            $track;
 
+        if (typeof indexOffset === 'undefined') {
+            indexOffset = 0;
+        }
         self.trackStack.forEach(function (upcoming, i) {
-            trackIndex = i + 1;
 
             $track = $('<div class="track"></div>')
                     .css({
                         'background-image': 'url(' + upcoming.coverImage + ')'
-                    }).data('trackIndex', trackIndex);
+                    })
+                    .text(upcoming.title)
+                    .data('trackIndex', i + 1 + indexOffset);
             self.$upcoming.append($track);
         });
     },
@@ -136,7 +142,7 @@ var _player = {
                 trackIndex;
 
             if (self.trackStack.length) {
-                if (Math.floor(self.audio.currentTime) >= self.trackStack[0].timestamp) {
+                if (Math.floor(self.audio.currentTime) > self.trackStack[0].timestamp) {
 
                     // remove the first child of the $upcoming tracks
                     self.$upcoming.find('.track:first').fadeOut(500, function () {
@@ -162,7 +168,8 @@ var _player = {
          */
         $('.tracks').on('click', '.track', function onClickTrack (event) {
             var trackIndex = $(event.target).data('trackIndex'),
-                played = [];
+                played = [],
+                i;
 
             self.audio.pause();
 
@@ -179,14 +186,22 @@ var _player = {
                 // reset the upcoming rows
                 self.$upcoming.empty().append('<div class="tracks__row"></div>')
 
-                // re render the played tracks
-                played.forEach(function (playedTrack, index) {
-                    self.addTrackToPlayed(self.createTrackElement(playedTrack, index));
-                });
+                if (trackIndex == 0) {
+                    self.audio.currentTime = 0;
+                }
+                else {
 
-                self.initializeUpcomingTracks();
+                    // re render the played tracks
+                    played.forEach(function (playedTrack, index) {
+                        self.addTrackToPlayed(self.createTrackElement(playedTrack, index));
+                        self.$played.finish();
+                    });
 
-                self.audio.currentTime = self.currentTrack.timestamp;
+                    self.audio.currentTime = self.currentTrack.timestamp;
+                }
+
+                self.initializeUpcomingTracks(trackIndex);
+                self.$upcoming.finish();
 
                 self.audio.play();
             });
