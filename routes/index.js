@@ -10,6 +10,13 @@ router.get('/', function (req, res) {
   });
 });
 
+router.get('/about', function (req, res) {
+    res.render('about', {
+        title: 'About',
+        active: 'about'
+    });
+});
+
 router.get('/mix/:mixId', function (req, res) {
     var mix = {
         title: 'Mix #1',
