@@ -6,7 +6,7 @@
   font-family: 'Quicksand';
   width: 500px;
   margin: 0 auto;
-  border: 5px solid #00CCFF;
+  border: 5px solid @sky-blue;
   border-radius: 5px;
 
   .plm-sign__upper {
@@ -15,7 +15,7 @@
     padding-top: 5px;
     font-family: 'Satisfy';
     display: block;
-    .neon(#FF1DCE, 1s, upper);
+    .neon(@hot-magenta, 1s, upper);
   }
 
   .plm-sign__lower {
@@ -24,7 +24,7 @@
     text-transform: uppercase;
     display: inline-block;
     line-height: 75px;
-    .neon(#00CCFF, 3s, lower);
+    .neon(@sky-blue, 3s, lower);
   }
 }
 .neon (@color, @time, @name) {
@@ -72,7 +72,7 @@
 
       a {
         text-decoration: none;
-        color: #fff;
+        color: @white;
       }
 
       &:first-child {
@@ -82,11 +82,11 @@
       &.active {
 
         &.blue {
-          border-bottom: 3px solid #00CCFF;
+          border-bottom: 3px solid @sky-blue;
         }
 
         &.pink {
-          border-bottom: 3px solid #FF1DCE;
+          border-bottom: 3px solid @hot-magenta;
         }
 
       }
