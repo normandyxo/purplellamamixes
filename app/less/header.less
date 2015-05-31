@@ -1,0 +1,95 @@
+#header {
+  width: 100%;
+}
+.plm-sign {
+  text-align: center;
+  font-family: 'Quicksand';
+  width: 500px;
+  margin: 0 auto;
+  border: 5px solid @sky-blue;
+  border-radius: 5px;
+
+  .plm-sign__upper {
+    font-size: 30px;
+    height: 30px;
+    padding-top: 5px;
+    font-family: 'Satisfy';
+    display: block;
+    .neon(@hot-magenta, 1s, upper);
+  }
+
+  .plm-sign__lower {
+    font-size: 100px;
+    height: 100px;
+    text-transform: uppercase;
+    display: inline-block;
+    line-height: 75px;
+    .neon(@sky-blue, 3s, lower);
+  }
+}
+.neon (@color, @time, @name) {
+  color: @color;
+  -webkit-animation: @name @time ease-in-out infinite alternate;
+  -webkit-backface-visibility: hidden;
+
+  @-webkit-keyframes @name {
+    from {
+      text-shadow: 0 0 10px @color,
+      0 0 20px @color,
+      0 0 30px @color,
+      0 0 40px fade(@color, 0.2),
+      0 0 70px fade(@color, 0.2),
+      0 0 80px fade(@color, 0.2),
+      0 0 100px fade(@color, 0.2),
+      0 0 150px fade(@color, 0.2);
+    }
+    to {
+      text-shadow: 0 0 5px @color,
+      0 0 10px @color,
+      0 0 15px @color,
+      0 0 20px fade(@color, 0.2),
+      0 0 35px fade(@color, 0.2),
+      0 0 40px fade(@color, 0.2),
+      0 0 50px fade(@color, 0.2),
+      0 0 75px fade(@color, 0.2);
+    }
+  }
+}
+.nav {
+  width: 500px;
+  margin: 0 auto;
+  font-family: 'Quicksand';
+
+  ul {
+    list-style: none;
+    padding: 5px 0;
+
+    li {
+      display: inline-block;
+      margin: 0 15px;
+      padding: 3px 0;
+      cursor: pointer;
+
+      a {
+        text-decoration: none;
+        color: @white;
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &.active {
+
+        &.blue {
+          border-bottom: 3px solid @sky-blue;
+        }
+
+        &.pink {
+          border-bottom: 3px solid @hot-magenta;
+        }
+
+      }
+    }
+  }
+}

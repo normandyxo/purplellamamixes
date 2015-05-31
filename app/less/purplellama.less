@@ -1,10 +1,11 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+@import url(http://fonts.googleapis.com/css?family=Quicksand);
+@import url(http://fonts.googleapis.com/css?family=Satisfy);
 
-a {
-  color: #00B7FF;
+body {
+  background-color: @midnight-blue;
+  padding: 50px;
+  font: 14px "Quicksand", Helvetica, Arial, sans-serif;
+  color: @white;
 }
 
 .hide {
@@ -15,4 +16,7 @@ a {
   clear: both;
 }
 
+@import "colors";
+@import "header";
 @import "mix.less";
+@import "mixes.less";

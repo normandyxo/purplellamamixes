@@ -4,7 +4,17 @@ var router = express.Router();
 /* GET home page. */
 
 router.get('/', function (req, res) {
-  res.render('index', { title: 'Express' });
+  res.render('index', {
+      title: '',
+      active: 'home'
+  });
+});
+
+router.get('/about', function (req, res) {
+    res.render('about', {
+        title: 'About',
+        active: 'about'
+    });
 });
 
 router.get('/mix/:mixId', function (req, res) {
@@ -28,7 +38,8 @@ router.get('/mix/:mixId', function (req, res) {
 
     res.render('mix', {
         mixId: req.params.mixId,
-        mix: mix
+        mix: mix,
+        active: ''
     });
 });
 
